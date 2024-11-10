@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>쪽지 보내기</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            flex-direction: column;
+        }
+        .message-form, .messages {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            margin-bottom: 20px;
+        }
+        .message-form h2, .messages h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .message-form label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .message-form input, .message-form textarea {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .message-form button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .message-display {
+            display: none;
+            padding: 10px;
+            background-color: #e7f3ff;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="message-form">
+    <h2>쪽지 보내기</h2>
+    <form onsubmit="sendMessage(); return false;">
+        <label for="recipientNickname">받는 사람 닉네임:</label>
+        <input type="text" id="recipientNickname" required>
+
+        <label for="messageContent">메시지 내용:</label>
+        <textarea id="messageContent" rows="4" required></textarea>
+
+        <button type="submit">쪽지 보내기</button>
+    </form>
+</div>
+
+<div class="messages">
+    <h2>내 쪽지함</h2>
+    <div id="messageDisplay" class="message-display">
+        <p id="messageText"></p>
+    </div>
+</div>
+
+<script>
+    function sendMessage() {
+        const recipient = document.getElementById('recipientNickname').value;
+        const content = document.getElementById('messageContent').value;
+        const sender = localStorage.getItem('loggedInUser') || 'Unknown User'; // 현재 로그인한 사용자
+
+        const messages = JSON.parse(localStorage.getItem('messages')) || [];
+        messages.push({ sender, recipient, content });
+
+        localStorage.setItem('messages', JSON.stringify(messages));
+
+        document.getElementById('recipientNickname').value = '';
+        document.getElementById('messageContent').value = '';
+
+        alert("쪽지가 발송되었습니다!");
+    }
+
+    function showMessages() {
+        const loggedInUser = localStorage.getItem('loggedInUser');
+        const messageDisplay = document.getElementById('messageDisplay');
+        const messageText = document.getElementById('messageText');
+
+        const messages = JSON.parse(localStorage.getItem('messages')) || [];
+        const userMessages = messages.filter(msg => msg.recipient === loggedInUser);
+
+        if (userMessages.length > 0) {
+            messageText.innerHTML = userMessages.map(msg => msg.content).join('<br><br>');
+            messageDisplay.style.display = 'block';
+        } else {
+            messageDisplay.style.display = 'none';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', showMessages);
+</script>
+
+</body>
+</html>
