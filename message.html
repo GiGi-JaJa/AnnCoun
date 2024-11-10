@@ -80,41 +80,6 @@
     </div>
 </div>
 
-<script>
-    function sendMessage() {
-        const recipient = document.getElementById('recipientNickname').value;
-        const content = document.getElementById('messageContent').value;
-        const sender = localStorage.getItem('loggedInUser') || 'Unknown User'; // 현재 로그인한 사용자
-
-        const messages = JSON.parse(localStorage.getItem('messages')) || [];
-        messages.push({ sender, recipient, content });
-
-        localStorage.setItem('messages', JSON.stringify(messages));
-
-        document.getElementById('recipientNickname').value = '';
-        document.getElementById('messageContent').value = '';
-
-        alert("쪽지가 발송되었습니다!");
-    }
-
-    function showMessages() {
-        const loggedInUser = localStorage.getItem('loggedInUser');
-        const messageDisplay = document.getElementById('messageDisplay');
-        const messageText = document.getElementById('messageText');
-
-        const messages = JSON.parse(localStorage.getItem('messages')) || [];
-        const userMessages = messages.filter(msg => msg.recipient === loggedInUser);
-
-        if (userMessages.length > 0) {
-            messageText.innerHTML = userMessages.map(msg => msg.content).join('<br><br>');
-            messageDisplay.style.display = 'block';
-        } else {
-            messageDisplay.style.display = 'none';
-        }
-    }
-
-    document.addEventListener('DOMContentLoaded', showMessages);
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
