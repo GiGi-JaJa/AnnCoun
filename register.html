@@ -73,23 +73,6 @@
     </form>
 </div>
 
-<script>
-    function registerUser() {
-        const name = document.getElementById('name').value;
-        const studentId = document.getElementById('studentId').value;
-        const nickname = document.getElementById('nickname').value;
-        const password = document.getElementById('password').value;
-
-        // 사용자 데이터 객체 생성
-        const userData = { name, studentId, nickname, password };
-        
-        // localStorage에 사용자 데이터 저장
-        localStorage.setItem(nickname, JSON.stringify(userData));
-
-        alert("회원가입이 완료되었습니다!");
-        window.location.href = 'login.html';
-    }
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
