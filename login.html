@@ -50,6 +50,16 @@
         .login-form button:hover {
             background-color: #0056b3;
         }
+        .register-link {
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+            color: #007bff;
+            text-decoration: none;
+        }
+        .register-link:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -65,32 +75,9 @@
 
         <button type="submit">로그인</button>
     </form>
+    <a href="register.html" class="register-link">회원가입</a>
 </div>
 
-<script>
-    function loginUser() {
-        const nickname = document.getElementById('nickname').value;
-        const password = document.getElementById('password').value;
-
-        // localStorage에서 사용자 데이터 가져오기
-        const storedUser = localStorage.getItem(nickname);
-        
-        if (storedUser) {
-            const userData = JSON.parse(storedUser);
-            
-            // 비밀번호가 일치하는지 확인
-            if (userData.password === password) {
-                alert("로그인 성공!");
-                localStorage.setItem('loggedInUser', nickname); // 로그인한 닉네임 저장
-                window.location.href = 'message.html'; // message.html로 이동
-            } else {
-                alert("비밀번호가 올바르지 않습니다.");
-            }
-        } else {
-            alert("닉네임이 올바르지 않습니다.");
-        }
-    }
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
