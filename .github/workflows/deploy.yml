@@ -1,0 +1,28 @@
+name: Deploy Admin Page with Secrets
+
+on:
+  push:
+    branches:
+      - main  # main 브랜치로 push될 때 실행
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Replace Secrets in Admin Page
+      run: |
+        mkdir -p dist
+        cp -r * dist/
+        sed -i 's/{{ADMIN_NICKNAME}}/${{ secrets.SECRET_ADMIN_NICKNAME }}/g' dist/admin.html
+        sed -i 's/{{ADMIN_PASSWORD}}/${{ secrets.SECRET_ADMIN_PASSWORD }}/g' dist/admin.html
+        sed -i 's/{{SECURITY_ANSWER}}/${{ secrets.SECRET_SECURITY_ANSWER }}/g' dist/admin.html
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./dist
