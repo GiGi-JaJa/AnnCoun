@@ -87,74 +87,71 @@
 </div>
 
 <script>
-    const ADMIN_NICKNAME = "{{ADMIN_NICKNAME}}";
-    const ADMIN_PASSWORD = "{{ADMIN_PASSWORD}}";
-    const SECURITY_ANSWER = "{{SECURITY_ANSWER}}";
+  const ADMIN_NICKNAME = "{{ADMIN_NICKNAME}}";
+  const ADMIN_PASSWORD = "{{ADMIN_PASSWORD}}";
+  const SECURITY_ANSWER = "{{SECURITY_ANSWER}}";
 
+  function checkAdmin() {
+      const enteredNickname = document.getElementById('adminNickname').value.trim();
+      const enteredPassword = document.getElementById('adminPassword').value.trim();
 
-    function checkAdmin() {
-        const enteredNickname = document.getElementById('adminNickname').value;
-        const enteredPassword = document.getElementById('adminPassword').value;
+      if (enteredNickname === ADMIN_NICKNAME && enteredPassword === ADMIN_PASSWORD) {
+          document.getElementById('adminLogin').style.display = 'none';
+          document.getElementById('securityQuestion').style.display = 'block';
+      } else {
+          alert("닉네임 또는 비밀번호가 올바르지 않습니다.");
+      }
+  }
 
-        if (enteredNickname === ADMIN_NICKNAME && enteredPassword === ADMIN_PASSWORD) {
-            document.getElementById('adminLogin').style.display = 'none';
-            document.getElementById('securityQuestion').style.display = 'block';
-        } else {
-            alert("닉네임 또는 비밀번호가 올바르지 않습니다.");
-        }
-    }
+  function verifySecurityAnswer() {
+      const enteredAnswer = document.getElementById('securityAnswer').value.trim();
 
-    function verifySecurityAnswer() {
-        const enteredAnswer = document.getElementById('securityAnswer').value;
+      if (enteredAnswer.toLowerCase() === SECURITY_ANSWER.toLowerCase()) {
+          document.getElementById('securityQuestion').style.display = 'none';
+          document.getElementById('adminPanel').style.display = 'block';
+          loadUserData();
+          showMessages();
+      } else {
+          alert("보안 질문 답변이 올바르지 않습니다.");
+      }
+  }
 
-        if (enteredAnswer === SECURITY_ANSWER) {
-            document.getElementById('securityQuestion').style.display = 'none';
-            document.getElementById('adminPanel').style.display = 'block';
-            loadUserData();
-            showMessages();
-        } else {
-            alert("보안 질문 답변이 올바르지 않습니다.");
-        }
-    }
+  function loadUserData() {
+      const userTable = document.getElementById('userTable');
+      for (let i = 0; i < localStorage.length; i++) {
+          const nickname = localStorage.key(i);
+          const userData = JSON.parse(localStorage.getItem(nickname));
 
-    function loadUserData() {
-        const userTable = document.getElementById('userTable');
-        for (let i = 0; i < localStorage.length; i++) {
-            const nickname = localStorage.key(i);
-            const userData = JSON.parse(localStorage.getItem(nickname));
+          if (userData && userData.studentId) {
+              const row = document.createElement('tr');
+              row.innerHTML = `
+                  <td>${userData.name}</td>
+                  <td>${userData.studentId}</td>
+                  <td>${userData.nickname}</td>
+                  <td>${userData.password}</td>
+              `;
+              userTable.appendChild(row);
+          }
+      }
+  }
 
-            if (userData && userData.studentId) {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${userData.name}</td>
-                    <td>${userData.studentId}</td>
-                    <td>${userData.nickname}</td>
-                    <td>${userData.password}</td>
-                `;
-                userTable.appendChild(row);
-            }
-        }
-    }
+  function showMessages() {
+      const messageDisplay = document.getElementById('messageDisplay');
+      const messageText = document.getElementById('messageText');
 
-    function showMessages() {
-        const messageDisplay = document.getElementById('messageDisplay');
-        const messageText = document.getElementById('messageText');
+      const messages = JSON.parse(localStorage.getItem('messages')) || [];
 
-        const messages = JSON.parse(localStorage.getItem('messages')) || [];
-
-        if (messages.length > 0) {
-            messageText.innerHTML = messages.map(msg => `
-                <strong>보낸 사람:</strong> ${msg.sender || "알 수 없음"}<br>
-                <strong>수신자:</strong> ${msg.recipient}<br>
-                <strong>내용:</strong> ${msg.content}
-            `).join('<br><br>');
-            messageDisplay.style.display = 'block';
-        } else {
-            messageDisplay.style.display = 'none';
-        }
-    }
-
-    document.addEventListener('DOMContentLoaded', showMessages);
+      if (messages.length > 0) {
+          messageText.innerHTML = messages.map(msg => `
+              <strong>보낸 사람:</strong> ${msg.sender || "알 수 없음"}<br>
+              <strong>수신자:</strong> ${msg.recipient}<br>
+              <strong>내용:</strong> ${msg.content}
+          `).join('<br><br>');
+          messageDisplay.style.display = 'block';
+      } else {
+          messageDisplay.style.display = 'none';
+      }
+  }
 </script>
 
 </body>
